@@ -6,7 +6,7 @@
 ### Website Preview
 <p align="center"> 
   <kbd>
-    <a href="https://varadbhogayata.github.io" target="_blank"><img src="Activities images/preview.gif">
+    <a href="https://Jingxxx123.github.io" target="_blank"><img src="Activities images/preview.gif">
   </a>
   </kbd>
 </p>
