@@ -65,9 +65,13 @@
 ---
 
 ### Activity 5: Adding dynamic content with JavaScript
-- Screenshot of "Recent Projects" section with top three projects:
+- Screenshot of repo after adding section:
 
-![Activity 5 Projects](Activities%20images/activity5_projects.png)
+![Activity 4 Repo](Activities%20images/activity5_repo.png)
+
+- Screenshot of deployed website ("Recent Projects" page):
+
+![Activity 4 Website](Activities%20images/activity5_website.png)
 
 
 
