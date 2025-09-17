@@ -337,6 +337,17 @@
       </div>
     </section>
 
+    <!-- Recent Projects (Dynamic) -->
+    <section id="recent-projects-section" class="section scrollspy">
+      <h3 class="page-title white-text purple-lighten-3">Recent Projects</h3>
+      <div class="container">
+        <div id="recent-projects" class="row"><!-- JS  --></div>
+        <div class="center-align" style="margin: 16px 0 32px;">
+          <a id="load-more" class="btn waves-effect">Load More</a>
+        </div>
+      </div>
+    </section>
+
     <!-- Fourth Section: Projects -->
     <section id="projects" class="section scrollspy">
       <h3 class="page-title white-text purple-lighten-3">Projects</h3>
@@ -758,6 +769,156 @@
       })
     })
   </script>
+
+  <!-- Recent Projects.js 
+  <script src="assets/js/recent-projects.js"></script>-->
+
+  <script>
+  const projects = [
+    {
+      title: "Hardware SNN Interface (FPGA)",
+      img: "/assets/img/projects-snn-fpga-vga.png",
+      desc: "VGA display pipeline for hardware-accelerated SNN on Nexys 4 DDR.",
+      tools: "Verilog, Xilinx Vivado, Nexys 4 DDR FPGA board, Git",
+      points: [
+        "Hardware-accelerated spiking neural network on FPGA.",
+        "VGA display of neuron spikes and predictions in real time.",
+        "Achieved 92% classification accuracy on 56-channel dataset."
+      ],
+      links: [{ label: "Repo", url: "https://github.com/bcTornado608/ECE532_SNN" }]
+    },
+    {
+      title: "Robot Gymnast",
+      img: "/assets/img/projects-robot-gymnast.png",
+      desc: "Two-link robot performing “giants” with VNHC & PD control.",
+      tools: "Arduino, MATLAB, Simulink, Dynamixel XL430, SolidWorks",
+      points: [
+        "Two-link robot performing gymnast-like 'giants' with single servo.",
+        "Simulated dynamics & control with PD and VNHC in MATLAB/Simulink.",
+        "Arduino-based real-time control with VNHC and fallback lookup table."
+      ],
+      links: [{ label: "Video/Report", url: "https://drive.google.com/file/d/1X7qoUwyWFcD2QEwCbPSJ-JHvAnB_dAzK/view?usp=drive_link" }]
+    },
+    {
+      title: "Fruit Classification (CNN)",
+      img: "/assets/img/projects-fruit-cnn.png",
+      desc: "Transfer learning + custom head, 97% accuracy on 10 classes.",
+      tools: "Python, PyTorch, Google Colab",
+      points: [
+        "Deep learning fruit classifier with 97% accuracy across 10 classes.",
+        "AlexNet transfer learning with 10,000+ augmented images.",
+        "Compared baseline SVM+ResNet18 (83%) vs CNN head (97%)."
+      ],
+      links: []
+    },
+    {
+      title: "Viva Max Map (C++ GIS)",
+      img: "/assets/img/projects-viva-max-map.png",
+      desc: "Linux GUI map app with OSM preload & fast pathfinding.",
+      tools: "C++, EZGL, Parallel Programming, Linux, Git",
+      points: [
+        "GIS tool in C++ with team of three, promoting healthy living.",
+        "Linux GUI map app with EZGL and OpenStreetMap preload.",
+        "Reduced map drawing time by 95%, 0.1s response at all zoom levels.",
+        "Features: bike lanes, transit maps, POIs, search & directions popup.",
+        "Optimized delivery routes using A*, multi-Dijkstra, Greedy, 2-opt."
+      ],
+      links: []
+    },
+    {
+      title: "Tube Frenzy (DE1-SoC)",
+      img: "/assets/img/projects-tube-frenzy.jpg",
+      desc: "Grid-based puzzle on FPGA SoC with keys/switch controls.",
+      tools: "C, DE1-SoC, Intel Quartus Prime, GPIO, Linux",
+      points: [
+        "Grid-based puzzle game on DE1-SoC board in C.",
+        "Controlled tube directions using keys and switches.",
+        "Implemented water flow with start/stop and failure indicator.",
+        "Added reset feature with randomized pipe layout."
+      ],
+      links: []
+    }
+  ];
+
+  const INITIAL_COUNT = 1;
+  const STEP = 2;
+
+  let shown = 0;
+
+  function sortByDateDesc(arr) {
+    return [...arr].sort((a, b) => new Date(b.date) - new Date(a.date));
+  }
+
+
+  function makeCard(p) {
+  const pointsList = p.points.map(pt => `<li>${pt}</li>`).join("");
+  const links = (p.links || []).map(l => `
+    <a href="${l.url}" target="_blank"
+       class="btn-floating btn-large waves-effect waves-light blue-grey tooltipped"
+       data-position="top" data-tooltip="${l.label}">
+       <i class="${/repo/i.test(l.label) ? "fa fa-github" : "fa fa-external-link"}"></i>
+    </a>`).join("");
+
+  return `
+    <div class="col s12 m6 l4">
+      <div class="card medium">
+        <div class="card-image waves-effect waves-block waves-light">
+          <img alt="${p.title}" src="${p.img}" style="height: 100%; width: 100%" class="activator" />
+        </div>
+        <div class="card-content">
+          <span class="card-title activator purple-lighten-3-text hoverline">
+            ${p.title}
+            <i class="mdi-navigation-more-vert right"></i>
+          </span>
+          <p>${p.desc}</p>
+        </div>
+        <div class="card-reveal">
+          <span class="card-title grey-text">
+            <small>Accomplishments</small>
+            <i class="mdi-navigation-close right"></i>
+          </span>
+          <ul>
+            <li><b>Tools:</b> ${p.tools}</li>
+            ${pointsList}
+          </ul>
+          <div class="card-action">
+            ${links}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
+  
+
+  function renderMore() {
+    const container = document.getElementById("recent-projects");
+    if (!container) return;
+
+    const sorted = sortByDateDesc(projects);
+    const count = (shown === 0 ? INITIAL_COUNT : STEP);
+    const next = sorted.slice(shown, shown + count);
+
+    next.forEach(p => container.insertAdjacentHTML("beforeend", makeCard(p)));
+    shown += next.length;
+
+    if (shown >= sorted.length) {
+      const btn = document.getElementById("load-more");
+      if (btn) btn.style.display = "none";
+    }
+  }
+
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMore();
+    const btn = document.getElementById("load-more");
+    if (btn) btn.addEventListener("click", renderMore);
+  });
+  </script>
+
+
 </body>
 
 </html>
